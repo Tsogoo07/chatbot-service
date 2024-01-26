@@ -30,7 +30,7 @@ async function logic(request) {
 
     const {channel_id, channel_type, user } = request;
 
-    if(user.id == 'admin' || user.id == 'chatbot'){
+    if(user.id != 'chatbot'){
         return;
     }
 
