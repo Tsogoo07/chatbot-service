@@ -15,7 +15,7 @@ const serverClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
 const app = express();
 
 
-configureStream(serverClient).then(_ => console.log(`Stream configured!`));
+//configureStream(serverClient).then(_ => console.log(`Stream configured!`));
 
 const port = 3000;
 
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 async function logic(request) {
 
-    const {channel_id, channel_type } = request
+    const {channel_id, channel_type } = request;
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
@@ -51,7 +51,7 @@ app.post("/gpt-request", async (request, response, next) => {
     console.log(`requested: ${JSON.stringify(request.body)}`);
 
     logic(request.body)
-    
+
    response.json({
     status: true,
     text: "",
