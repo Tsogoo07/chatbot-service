@@ -29,7 +29,10 @@ app.get('/', (req, res) => {
 
 
 app.post("/gpt-request", async (request, response, next) => {
-    console.log('requested');
+    console.log(`requested: ${request.body}`);
+
+
+    
     channel.sendMessage({
         text: 'okey',
         user: {
