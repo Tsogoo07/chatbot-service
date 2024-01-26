@@ -28,7 +28,11 @@ app.get('/', (req, res) => {
 
 async function logic(request) {
 
-    const {channel_id, channel_type } = request;
+    const {channel_id, channel_type, user } = request;
+
+    if(user.id == 'admin' || user.id == 'chatbot'){
+        return;
+    }
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
@@ -36,14 +40,16 @@ async function logic(request) {
     await channel.sendMessage({
         text: 'okey',
         user: {
-            id: "admin",
+            id: "tsogoo",
             image: "https://openai.com/content/images/2022/05/openai-avatar.png",
             name: "ChatGPT bot",
         },
     })
    console.log("success");
+   return true
    } catch(e) {
     console.log(e);
+    return false;
    }
 }
 
