@@ -35,18 +35,27 @@ app.post("/gpt-request", async (request, response, next) => {
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
-    channel.sendMessage({
+   try {
+    await channel.sendMessage({
         text: 'okey',
         user: {
             id: "admin",
             image: "https://openai.com/content/images/2022/05/openai-avatar.png",
             name: "ChatGPT bot",
         },
-    }).catch((error) => console.error(error));
+    })
     response.json({
         status: true,
         text: "",
     });
+   } catch(e) {
+    console.log(e);
+    response.json({
+        status: true,
+        text: "",
+    }); 
+   }
+    
 
        // const message = request.body.message;
 
