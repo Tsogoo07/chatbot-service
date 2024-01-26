@@ -29,43 +29,55 @@ app.get('/', (req, res) => {
 
 
 app.post("/gpt-request", async (request, response, next) => {
-    print('requested');
+    console.log('requested');
+    channel.sendMessage({
+        text: 'okey',
+        user: {
+            id: "admin",
+            image: "https://openai.com/content/images/2022/05/openai-avatar.png",
+            name: "ChatGPT bot",
+        },
+    }).catch((error) => console.error(error));
+    response.json({
+        status: true,
+        text: "",
+    });
     const message = request.body.message;
-    if (message.command === "gpt") {
-        try {
-            const text = message.args;
+    // if (message.command === "gpt") {
+    //     try {
+    //         const text = message.args;
 
-            const aiResponse= await openai.chat.completions.create({
-                    messages: [{ role: "system", content: "You are a helpful assistant." }],
-                    model: "gpt-3.5-turbo",
-                  });
+    //         const aiResponse= await openai.chat.completions.create({
+    //                 messages: [{ role: "system", content: "You are a helpful assistant." }],
+    //                 model: "gpt-3.5-turbo",
+    //               });
 
-            if (aiResponse.status === 200) {
-                const results = await aiResponse.text();
-                const aiText = parseGPTResponse(results);
+    //         if (aiResponse.status === 200) {
+    //             const results = await aiResponse.text();
+    //             const aiText = parseGPTResponse(results);
             
-                const channelSegments = message.cid.split(":");
-                const channel = serverClient.channel(channelSegments[0], channelSegments[1]);
-                message.text = "";
-                channel.sendMessage({
-                    text: aiText,
-                    user: {
-                        id: "admin",
-                        image: "https://openai.com/content/images/2022/05/openai-avatar.png",
-                        name: "ChatGPT bot",
-                    },
-                }).catch((error) => console.error(error));
-                response.json({
-                    status: true,
-                    text: "",
-                });
-            }
-            next();
-        } catch (exception) {
-            console.log(`Exception Occurred`);
-            console.error(exception);
-        }
-    }
+    //             const channelSegments = message.cid.split(":");
+    //             const channel = serverClient.channel(channelSegments[0], channelSegments[1]);
+    //             message.text = "";
+    //             channel.sendMessage({
+    //                 text: aiText,
+    //                 user: {
+    //                     id: "admin",
+    //                     image: "https://openai.com/content/images/2022/05/openai-avatar.png",
+    //                     name: "ChatGPT bot",
+    //                 },
+    //             }).catch((error) => console.error(error));
+    //             response.json({
+    //                 status: true,
+    //                 text: "",
+    //             });
+    //         }
+    //         next();
+    //     } catch (exception) {
+    //         console.log(`Exception Occurred`);
+    //         console.error(exception);
+    //     }
+    // }
 
 });
 

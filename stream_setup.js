@@ -11,7 +11,7 @@ export async function configureStream(serverClient) {
             .catch((err) => console.error(`Something went wrong adding Hugo custom command ${err}`));
   
         serverClient.updateAppSettings({
-            custom_action_handler_url: "YOUR-NGROK-ENDPOINT",
+            custom_action_handler_url: "http://202.179.10.104:3000/gpt-request",
         })
             .then(r => console.log(r))
             .catch(e => console.error(`Unable to add custom action URL ${e}`));
