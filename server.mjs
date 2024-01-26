@@ -26,12 +26,9 @@ app.get('/', (req, res) => {
   res.send('Welcome to my server!');
 });
 
+async function logic(request) {
 
-
-app.post("/gpt-request", async (request, response, next) => {
-    console.log(`requested: ${JSON.stringify(request.body)}`);
-
-    const {channel_id, channel_type } = request.body
+    const {channel_id, channel_type } = request
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
@@ -44,17 +41,21 @@ app.post("/gpt-request", async (request, response, next) => {
             name: "ChatGPT bot",
         },
     })
-    response.json({
-        status: true,
-        text: "",
-    });
+   console.log("success");
    } catch(e) {
     console.log(e);
-    response.json({
-        status: true,
-        text: "",
-    }); 
    }
+}
+
+app.post("/gpt-request", async (request, response, next) => {
+    console.log(`requested: ${JSON.stringify(request.body)}`);
+
+    logic(request.body)
+    
+   response.json({
+    status: true,
+    text: "",
+});
     
 
        // const message = request.body.message;
