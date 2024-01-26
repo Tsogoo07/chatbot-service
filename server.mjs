@@ -29,23 +29,26 @@ app.get('/', (req, res) => {
 
 
 app.post("/gpt-request", async (request, response, next) => {
-    console.log(`requested: ${request.body}`);
+    console.log(`requested: ${JSON.stringify(request.body)}`);
 
 
     
-    channel.sendMessage({
-        text: 'okey',
-        user: {
-            id: "admin",
-            image: "https://openai.com/content/images/2022/05/openai-avatar.png",
-            name: "ChatGPT bot",
-        },
-    }).catch((error) => console.error(error));
-    response.json({
-        status: true,
-        text: "",
-    });
-    const message = request.body.message;
+    // channel.sendMessage({
+    //     text: 'okey',
+    //     user: {
+    //         id: "admin",
+    //         image: "https://openai.com/content/images/2022/05/openai-avatar.png",
+    //         name: "ChatGPT bot",
+    //     },
+    // }).catch((error) => console.error(error));
+    // response.json({
+    //     status: true,
+    //     text: "",
+    // });
+
+       // const message = request.body.message;
+
+
     // if (message.command === "gpt") {
     //     try {
     //         const text = message.args;
