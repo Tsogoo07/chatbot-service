@@ -25,7 +25,7 @@ async function logic(request) {
 
     const {channel_id, channel_type, user } = request;
 
-    if(user.id == 'bot'){
+    if(user.id == 'chatbot'){
         return;
     }
 
@@ -35,7 +35,7 @@ async function logic(request) {
     await channel.sendMessage({
         text: 'okey',
         user: {
-            id: "bot",
+            id: "chatbot",
             image: "https://openai.com/content/images/2022/05/openai-avatar.png",
             name: "Tsogoo's bot",
         },
