@@ -6,7 +6,7 @@ import {StreamChat} from "stream-chat";
 
 dotenv.config({path: ".env"})
 
-const OPENAI_AUTHORIZATION_KEY = process.env.OPENAI_AUTHORIZATION_KEY;
+//const OPENAI_AUTHORIZATION_KEY = process.env.OPENAI_AUTHORIZATION_KEY;
 const STREAM_API_KEY = process.env.STREAM_API_KEY;
 const STREAM_API_SECRET = process.env.STREAM_API_SECRET;
 
@@ -21,13 +21,16 @@ app.get('/', (req, res) => {
   res.send('Welcome to my server!');
 });
 
-async function logic(request) {
+async function logic(data) {
 
-    const {channel_id, channel_type, user } = request;
+    const {channel_id, channel_type, user } = data;
 
     if(user.id == 'chatbot'){
         return;
     }
+    
+    const message=data["message"]["text"];
+    console.log(`message: ${message}, sent by ${user.name}`);
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
