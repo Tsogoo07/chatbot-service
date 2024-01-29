@@ -86,7 +86,7 @@ async function assistant_api(message){
 
 
     //add a message to a thread
-    const message=await openai.beta.threads.messages.create(
+    const addingMessage=await openai.beta.threads.messages.create(
         thread.id,
         {
             role:"user",
@@ -128,7 +128,7 @@ async function assistant_api(message){
         }
     }
 
-    
+
    const messages=await openai.beta.threads.messages.list(thread.id);
 
     messages.body.data.forEach(element => {
