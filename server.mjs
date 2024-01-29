@@ -30,7 +30,7 @@ async function logic(request) {
 
     const {channel_id, channel_type, user } = request;
 
-    if(user.id == 'tsogoo'){
+    if(user.id == 'bot'){
         return;
     }
 
@@ -40,9 +40,9 @@ async function logic(request) {
     await channel.sendMessage({
         text: 'okey',
         user: {
-            id: "tsogoo",
+            id: "bot",
             image: "https://openai.com/content/images/2022/05/openai-avatar.png",
-            name: "ChatGPT bot",
+            name: "Tsogoo's bot",
         },
     })
    console.log("success");
@@ -56,6 +56,9 @@ async function logic(request) {
 app.post("/gpt-request", async (request, response, next) => {
     console.log(`requested: ${JSON.stringify(request.body)}`);
 
+
+    const type=request.body["type"];
+    if(type=="message.new")
     logic(request.body)
 
    response.json({
