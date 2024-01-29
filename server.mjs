@@ -36,13 +36,13 @@ async function logic(data) {
     const message=data["message"]["text"];
     console.log(`message: ${message}, sent by ${user.id}`);
 
-    const response=assistant_api(message);
+    const responseMsg=await assistant_api(message);
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
    try {
     await channel.sendMessage({
-        text: response,
+        text: responseMsg,
         user: {
             id: "chatbot",
             image: "https://openai.com/content/images/2022/05/openai-avatar.png",
@@ -79,19 +79,11 @@ app.listen(port, () => {
   });
   
 
-
- export function parseGPTResponse(formattedString) {
-    const dataChunks = formattedString.split("data:");
-    const responseObjectText = dataChunks[dataChunks.length - 2].trim();
-    const responseObject = JSON.parse(responseObjectText);
-    return responseObject.message.content.parts[0];
-}
- 
 async function assistant_api(message){
     
     //create thread
     const thread= await openai.beta.threads.create();
-    
+
 
     //add a message to a thread
     const message=await openai.beta.threads.messages.create(
@@ -104,9 +96,47 @@ async function assistant_api(message){
 
     // run the assistant 
     const run= await openai.beta.threads.runs.create(
-
+      thread.id,
+      {
+        assistant_id: assistant.id,
+        model: "gpt-4-turbo-preview",
+        tools: [{"type": "code_interpreter"}, {"type": "retrieval"}]
+      }
     );
 
- return '';
+    let response_status='';
+
+    while(run.status!="completed"){
+       const  keep_retrieving_run= await openai.beta.threads.runs.retrieve(
+        thread.id,
+        run.id
+        );
+        console.log(`run status: ${keep_retrieving_run.status}`);
+        if(keep_retrieving_run.status=="completed")
+        {
+          response_status="completed";
+          break;
+        }
+        else if(keep_retrieving_run.status=="cancelled")
+        {
+          response_status="cancelled";
+          break;
+        }
+        else if( keep_retrieving_run.status=="failed"){
+          response_status="failed";
+          break;
+        }
+    }
+
+    
+   const messages=await openai.beta.threads.messages.list(thread.id);
+
+    messages.body.data.forEach(element => {
+        console.log(`message: ${element}`);
+    });
+    const res=messages.body.data[0].content[0]['text']['value'];
+    console.log(`response: ${res} `);
+
+ return res;
 }
 
