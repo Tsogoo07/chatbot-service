@@ -1,14 +1,18 @@
 import * as dotenv from 'dotenv';
 import express from "express";
 import {StreamChat} from "stream-chat";
-
-
+import {OpenAI} from "openai"
 
 dotenv.config({path: ".env"})
 
 //const OPENAI_AUTHORIZATION_KEY = process.env.OPENAI_AUTHORIZATION_KEY;
 const STREAM_API_KEY = process.env.STREAM_API_KEY;
 const STREAM_API_SECRET = process.env.STREAM_API_SECRET;
+
+
+const openai=new OpenAI({apiKey: process.env.OPEN_API_KEY});
+const assistant=await openai.beta.assistants.retrieve(process.env.ASSISTANT_ID);
+
 
 const serverClient = StreamChat.getInstance(STREAM_API_KEY, STREAM_API_SECRET);
 
@@ -32,11 +36,13 @@ async function logic(data) {
     const message=data["message"]["text"];
     console.log(`message: ${message}, sent by ${user.id}`);
 
+    const response=assistant_api(message);
+
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
    try {
     await channel.sendMessage({
-        text: 'okey',
+        text: response,
         user: {
             id: "chatbot",
             image: "https://openai.com/content/images/2022/05/openai-avatar.png",
@@ -80,16 +86,27 @@ app.listen(port, () => {
     const responseObject = JSON.parse(responseObjectText);
     return responseObject.message.content.parts[0];
 }
+ 
+async function assistant_api(message){
+    
+    //create thread
+    const thread= await openai.beta.threads.create();
+    
 
+    //add a message to a thread
+    const message=await openai.beta.threads.messages.create(
+        thread.id,
+        {
+            role:"user",
+            content:message
+        }
+    );
 
+    // run the assistant 
+    const run= await openai.beta.threads.runs.create(
 
-// async function main() {
-//   const completion = await openai.chat.completions.create({
-//     messages: [{ role: "system", content: "You are a helpful assistant." }],
-//     model: "gpt-3.5-turbo",
-//   });
+    );
 
-//   console.log(completion.choices[0]);
-// }
+ return '';
+}
 
-// main();
