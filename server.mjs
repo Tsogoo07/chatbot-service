@@ -30,7 +30,7 @@ async function logic(data) {
     }
     
     const message=data["message"]["text"];
-    console.log(`message: ${message}, sent by ${user.name}`);
+    console.log(`message: ${message}, sent by ${user.id}`);
 
     const channel= serverClient.channel(channel_type,channel_id);
     await channel.create();
